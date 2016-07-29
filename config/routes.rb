@@ -6,6 +6,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       get '/hello', to: 'hello#hello'
       resources :accounts
+      resources :microposts
     end
   end
 
