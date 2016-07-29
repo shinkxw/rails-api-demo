@@ -20,7 +20,7 @@ module Api
         @micropost = Micropost.new(micropost_params)
 
         if @micropost.save
-          render json: @micropost, status: :created, location: @micropost
+          render json: @micropost, status: :created
         else
           render json: @micropost.errors, status: :unprocessable_entity
         end
