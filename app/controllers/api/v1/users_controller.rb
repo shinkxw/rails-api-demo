@@ -40,6 +40,20 @@ module Api
         @user.destroy
       end
 
+      # POST /users/login
+      def login
+        user = User.find_by(email: params[:email].downcase)
+        if user
+          if user.authenticate(params[:password])
+            render plain: get_token_by_user(user)
+          else
+            render plain: "密码错误, 请重新输入", status: :unprocessable_entity
+          end
+        else
+          render plain: "账号不存在, 请重新输入", status: :unprocessable_entity
+        end
+      end
+
       private
         # Use callbacks to share common setup or constraints between actions.
         def set_user

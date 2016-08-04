@@ -6,6 +6,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       get '/hello', to: 'hello#hello'
       resources :users
+      post '/users/login', to: 'users#login'
       resources :microposts
     end
   end
