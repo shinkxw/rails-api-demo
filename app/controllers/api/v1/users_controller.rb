@@ -2,12 +2,18 @@ module Api
   module V1
     class UsersController < ApplicationController
       before_action :set_user, only: [:show, :update, :destroy]
+      before_action :authenticate_jwt, only: [:index, :update]
+      before_action :correct_user, only: [:update]
 
       # GET /users
       def index
-        @users = User.all
+        page = params[:page] ? params[:page].to_i : 1
+        page_size = params[:page_size] ? params[:page_size].to_i : 30
 
-        render json: @users
+        @users = User.limit(page_size).offset(page_size * (page - 1))
+        page_num = (User.count / page_size.to_f).ceil
+
+        render json: { data: @users, page_num: page_num }
       end
 
       # GET /users/1
@@ -20,7 +26,8 @@ module Api
         @user = User.new(signup_user_params)
 
         if @user.save
-          render json: @user, status: :created
+          # render json: @user, status: :created
+          render plain: get_token_by_user(@user)
         else
           render json: @user.errors, status: :unprocessable_entity
         end
@@ -28,7 +35,7 @@ module Api
 
       # PATCH/PUT /users/1
       def update
-        if @user.update(user_params)
+        if @user.update(signup_user_params)
           render json: @user
         else
           render json: @user.errors, status: :unprocessable_entity
@@ -67,6 +74,11 @@ module Api
 
         def signup_user_params
           params.permit(:name, :email, :password, :password_confirmation)
+        end
+
+        def correct_user
+          @user = User.find(params[:id])
+          return unauthorize_error unless current_user?(@user)
         end
     end
   end
