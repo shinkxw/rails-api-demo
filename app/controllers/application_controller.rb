@@ -6,7 +6,7 @@ class ApplicationController < ActionController::API
     def get_token_by_user(user)
       exp = Time.now.to_i + 7 * 24 * 3600#到期时间
       iat = Time.now.to_i#发行时间
-      payload = { :id => user.id, :exp => exp, :iat => iat }
+      payload = { :id => user.id, :admin => user.admin, :exp => exp, :iat => iat }
       JWT.encode(payload, Jwt_hmac_secret, 'HS256')
     end
 

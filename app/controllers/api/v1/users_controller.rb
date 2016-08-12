@@ -2,8 +2,9 @@ module Api
   module V1
     class UsersController < ApplicationController
       before_action :set_user, only: [:show, :update, :destroy]
-      before_action :authenticate_jwt, only: [:index, :update]
+      before_action :authenticate_jwt, only: [:index, :update, :destroy]
       before_action :correct_user, only: [:update]
+      before_action :admin_user, only: :destroy
 
       # GET /users
       def index
@@ -79,6 +80,11 @@ module Api
         def correct_user
           @user = User.find(params[:id])
           return unauthorize_error unless current_user?(@user)
+        end
+
+        #  确保是管理员
+        def admin_user
+          return unauthorize_error unless current_user.admin?
         end
     end
   end
