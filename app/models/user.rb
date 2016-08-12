@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  has_many :microposts, dependent: :destroy
   before_save { self.email = email.downcase }
   validates :name, presence: {message: '不能为空'},
                    length: { maximum: 50, message: '太长了(最多50个字符)' }
