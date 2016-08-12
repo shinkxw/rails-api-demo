@@ -12,9 +12,8 @@ module Api
         page_size = params[:page_size] ? params[:page_size].to_i : 30
 
         @users = User.limit(page_size).offset(page_size * (page - 1))
-        page_num = (User.count / page_size.to_f).ceil
 
-        render json: { data: @users, page_num: page_num }
+        render json: { data: @users, all_count: User.count }
       end
 
       # GET /users/1
