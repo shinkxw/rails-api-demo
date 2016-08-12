@@ -5,9 +5,15 @@ module Api
 
       # GET /microposts
       def index
-        @microposts = Micropost.all
+        query = Micropost.all
+        query = query.where(user_id: params[:user_id]) if params[:user_id]
 
-        render json: @microposts
+        page = params[:page] ? params[:page].to_i : 1
+        page_size = params[:page_size] ? params[:page_size].to_i : 30
+
+        @users = query.limit(page_size).offset(page_size * (page - 1))
+
+        render json: { data: @users, all_count: query.count }
       end
 
       # GET /microposts/1
