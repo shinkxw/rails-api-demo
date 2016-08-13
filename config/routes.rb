@@ -5,8 +5,11 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       get '/hello', to: 'hello#hello'
-      resources :users
+
       post '/users/login', to: 'users#login'
+      resources :users
+
+      get '/microposts/count', to: 'microposts#count'
       resources :microposts
     end
   end

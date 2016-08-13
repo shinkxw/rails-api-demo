@@ -21,7 +21,6 @@ module Api
         @user = User.new(signup_user_params)
 
         if @user.save
-          # render json: @user, status: :created
           render plain: get_token_by_user(@user)
         else
           render json: @user.errors, status: :unprocessable_entity
@@ -31,7 +30,7 @@ module Api
       # PATCH/PUT /users/1
       def update
         if @user.update(signup_user_params)
-          render json: @user
+          render plain: get_token_by_user(@user)
         else
           render json: @user.errors, status: :unprocessable_entity
         end
