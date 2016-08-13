@@ -8,12 +8,7 @@ module Api
 
       # GET /users
       def index
-        page = params[:page] ? params[:page].to_i : 1
-        page_size = params[:page_size] ? params[:page_size].to_i : 30
-
-        @users = User.limit(page_size).offset(page_size * (page - 1))
-
-        render json: { data: @users, all_count: User.count }
+        render json: paginate(User)
       end
 
       # GET /users/1

@@ -43,4 +43,10 @@ class ApplicationController < ActionController::API
     def unauthorize_error
       render plain: "用户未授权", status: :forbidden
     end
+
+    def paginate(query, default_page_size = 30, default_page = 1)
+      page = params[:page] ? params[:page].to_i : default_page
+      page_size = params[:page_size] ? params[:page_size].to_i : default_page_size
+      { data: query.limit(page_size).offset(page_size * (page - 1)), all_count: query.count }
+    end
 end
