@@ -12,14 +12,6 @@ module Api
         render :json => paginate(query).to_json(:include => { :user => { :only => [:name, :email] } } )
       end
 
-      # GET /microposts/count
-      def count
-        query = Micropost.all
-        query = query.where(user_id: params[:user_id]) if params[:user_id]
-
-        render json: query.count
-      end
-
       # GET /microposts/1
       def show
         render json: @micropost

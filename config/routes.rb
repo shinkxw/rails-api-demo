@@ -6,10 +6,15 @@ Rails.application.routes.draw do
     namespace :v1 do
       get '/hello', to: 'hello#hello'
 
-      post '/users/login', to: 'users#login'
-      resources :users
+      resources :users do
+        collection do
+          post :login
+        end
+        member do
+          get :microposts_count, :following, :followers
+        end
+      end
 
-      get '/microposts/count', to: 'microposts#count'
       resources :microposts
     end
   end

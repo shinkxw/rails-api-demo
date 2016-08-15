@@ -1,7 +1,7 @@
 module Api
   module V1
     class UsersController < ApplicationController
-      before_action :set_user, only: [:show, :update, :destroy]
+      before_action :set_user, only: [:show, :update, :destroy, :microposts_count]
       before_action :authenticate_jwt, only: [:index, :update, :destroy]
       before_action :correct_user, only: [:update]
       before_action :admin_user, only: :destroy
@@ -53,6 +53,11 @@ module Api
         else
           render plain: "账号不存在, 请重新输入", status: :unprocessable_entity
         end
+      end
+
+      #GET /users/1/microposts_count
+      def microposts_count
+        render json: @user.microposts.count
       end
 
       private
