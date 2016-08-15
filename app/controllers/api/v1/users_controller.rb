@@ -1,7 +1,7 @@
 module Api
   module V1
     class UsersController < ApplicationController
-      before_action :set_user, only: [:show, :update, :destroy, :microposts_count]
+      before_action :set_user, only: [:show, :update, :destroy, :microposts_count, :following_count, :followers_count]
       before_action :authenticate_jwt, only: [:index, :update, :destroy]
       before_action :correct_user, only: [:update]
       before_action :admin_user, only: :destroy
@@ -58,6 +58,16 @@ module Api
       #GET /users/1/microposts_count
       def microposts_count
         render json: @user.microposts.count
+      end
+
+      #GET /users/1/following_count
+      def following_count
+        render json: @user.following.count
+      end
+
+      #GET /users/1/followers_count
+      def followers_count
+        render json: @user.followers.count
       end
 
       private

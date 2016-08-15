@@ -3,6 +3,7 @@ module Api
     class MicropostsController < ApplicationController
       before_action :set_micropost, only: [:show, :update, :destroy]
       before_action :authenticate_jwt, only: [:create, :destroy]
+      before_action :correct_user, only: :destroy
 
       # GET /microposts
       def index
@@ -51,6 +52,11 @@ module Api
         # Only allow a trusted parameter "white list" through.
         def micropost_params
           params.require(:micropost).permit(:content)
+        end
+
+        def correct_user
+          @micropost = current_user.microposts.find_by(id: params[:id])
+          return unauthorize_error if @micropost.nil?
         end
     end
   end

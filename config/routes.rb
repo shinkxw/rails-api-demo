@@ -11,11 +11,12 @@ Rails.application.routes.draw do
           post :login
         end
         member do
-          get :microposts_count, :following, :followers
+          get :microposts_count, :following, :followers, :following_count, :followers_count
         end
       end
 
       resources :microposts
+      resources :relationships
     end
   end
 
