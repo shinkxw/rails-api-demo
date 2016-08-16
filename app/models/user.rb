@@ -34,6 +34,12 @@ class User < ApplicationRecord
   validates :password, presence: {message: '不能为空'},
                        length: { minimum: 6, message: '太短了(最低6个字符)' },
                        allow_nil: true
+
+  #  返回用户的动态流
+  def feed
+    following_ids = "SELECT followed_id FROM relationships WHERE follower_id = :user_id"
+    Micropost.where("user_id IN (#{following_ids}) OR user_id = :user_id", user_id: id)
+  end
   #  关注另一个用户
   def follow(other_user)
     active_relationships.create(followed_id: other_user.id)

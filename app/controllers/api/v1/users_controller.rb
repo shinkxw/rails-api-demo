@@ -1,19 +1,19 @@
 module Api
   module V1
     class UsersController < ApplicationController
-      before_action :set_user, only: [:show, :update, :destroy, :microposts_count, :following_count, :followers_count, :relationship_id]
+      before_action :set_user, except: [:index, :create, :login]
       before_action :authenticate_jwt, only: [:index, :update, :destroy]
       before_action :correct_user, only: [:update]
       before_action :admin_user, only: :destroy
 
       # GET /users
       def index
-        render json: paginate(User)
+        render json: paginate(User).to_json(:except => [:password_digest])
       end
 
       # GET /users/1
       def show
-        render json: @user
+        render json: @user.to_json(:except => [:password_digest])
       end
 
       # POST /users
@@ -55,9 +55,31 @@ module Api
         end
       end
 
+      #GET /users/1/feed
+      def feed
+        query = @user.feed.includes(:user)
+        render json: paginate(query).to_json(:include => { :user => { :only => [:name, :email] } } )
+      end
+
+      #GET /users/1/microposts
+      def microposts
+        query = @user.microposts.includes(:user)
+        render json: paginate(query).to_json(:include => { :user => { :only => [:name, :email] } } )
+      end
+
       #GET /users/1/microposts_count
       def microposts_count
         render json: @user.microposts.count
+      end
+
+      #GET /users/1/following
+      def following
+        render json: paginate(@user.following).to_json(:except => [:password_digest])
+      end
+
+      #GET /users/1/followers
+      def followers
+        render json: paginate(@user.followers).to_json(:except => [:password_digest])
       end
 
       #GET /users/1/following_count

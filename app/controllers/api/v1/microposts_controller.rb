@@ -9,7 +9,6 @@ module Api
       def index
         query = Micropost.includes(:user)
         query = query.where(user_id: params[:user_id]) if params[:user_id]
-        model = paginate(query)[:data].first
         render :json => paginate(query).to_json(:include => { :user => { :only => [:name, :email] } } )
       end
 
